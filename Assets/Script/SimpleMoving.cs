@@ -1,53 +1,3 @@
-//     // Fisrt script:
-
-// using System;
-// using UnityEngine;
-// using UnityEngine.AI;
-
-// public class SimpleMoving : MonoBehaviour
-// {
-//     NavMeshAgent agent;
-//     // Start is called once before the first execution of Update after the MonoBehaviour is created
-//     void Start()
-//     {
-
-//         agent = GetComponent<NavMeshAgent>();
-
-//     }
-
-//     // Update is called once per frame
-//     void Update()
-//     {
-        
-//         // check if we received any commands from our main AI
-//         // do stuff for those commands
-//         // send any information back to the main AI that we need to send
-//         //   -> our position
-//         //   -> any updates (e.g. we cleared an obstacle)
-
-
-//         NavMeshPath path = new NavMeshPath();
-//         agent.CalculatePath(new Vector3(7, 0, -9), path);
-//         agent.SetPath(path);
-
-//     }
-
-
-//     // public void MoveCommand() { }
-
-//     // public void AddToCommandQueue() { }
-
-//     // public void ReceiveMessage(string message)
-//     // {
-//     //     Console.WriteLine(message);
-//     // }
-// }
-
-
-
-
-// // Second script:
-
 using System;
 using UnityEngine;
 using UnityEngine.AI;
@@ -64,21 +14,39 @@ public class SimpleMoving : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
 
-        manager = FindObjectOfType<BasicAI>();
-        // manager = FindFirstObjectByType<BasicAI>();
+        // manager = FindObjectOfType<BasicAI>();
+        manager = FindFirstObjectByType<BasicAI>();
         // manager = FindAnyObjectByType<BasicAI>();
+        if (agent == null)
+        {
+            Debug.LogWarning(
+                gameObject.name +
+                " does not have a NavMeshAgent."
+            );
+        }
+
+        if (manager == null)
+        {
+            Debug.LogWarning(
+                "BasicAI could not be found."
+            );
+        }
     }
 
     void Update()
     {
-        if(hasCommand)
+        if(hasCommand &&
+            agent != null)
         {
             if(!agent.pathPending && agent.remainingDistance < 0.5f)
             {
                 hasCommand = false;
+                if (manager != null)
+                {
 
-                manager.ReceiveRobotReport(gameObject.name,
+                    manager.ReceiveRobotReport(gameObject.name,
                                            "Destination Reached");
+                }
             }
         }
     }
@@ -86,6 +54,16 @@ public class SimpleMoving : MonoBehaviour
 // Move
     public void MoveCommand(Vector3 target)
     {
+        if (agent == null)
+        {
+            Debug.LogWarning(
+                gameObject.name +
+                " cannot move because it has no NavMeshAgent."
+            );
+
+            return;
+        }
+
         agent.SetDestination(target);
 
         hasCommand = true;
@@ -94,31 +72,6 @@ public class SimpleMoving : MonoBehaviour
                   " moving to " + target);
     }
 
-// // You should extend SimpleMoving when the robot needs to perform an action after arriving or change its behavior.
-
-// // Search
-// public void Search()
-// {
-//     Debug.Log(gameObject.name + " is searching the area.");
-// }
-
-// // Rescue
-// public void Rescue()
-// {
-//     Debug.Log(gameObject.name + " is rescuing the survivor.");
-// }
-
-// // Clear Obstacle
-// public void ClearObstacle()
-// {
-//     Debug.Log(gameObject.name + " is clearing the obstacle.");
-// }
-
-// // Return to Base
-// public void ReturnToBase(Vector3 baseLocation)
-// {
-//     MoveCommand(baseLocation);
-// }
     public void ReceiveMessage(string message)
     {
         Debug.Log(gameObject.name +
@@ -132,39 +85,11 @@ public class SimpleMoving : MonoBehaviour
 
     public void ReportPosition()
     {
-        manager.ReceiveRobotPosition(
-            gameObject.name,
-            transform.position);
+        if (manager != null)
+        {
+            manager.ReceiveRobotPosition(
+                gameObject.name,
+                transform.position);
+        }
     }
 }
-
-
-
-
-
-//     // Instead of having the robot know about BasicAI, you can make the robot completely independent.
-// public class SimpleMoving : MonoBehaviour
-// {
-//     private NavMeshAgent agent;
-
-//     void Start()
-//     {
-//         agent = GetComponent<NavMeshAgent>();
-//     }
-
-//     public void MoveCommand(Vector3 target)
-//     {
-//         agent.SetDestination(target);
-//     }
-
-//     public Vector3 GetPosition()
-//     {
-//         return transform.position;
-//     }
-
-//     public bool HasReachedDestination()
-//     {
-//         return !agent.pathPending &&
-//                agent.remainingDistance <= agent.stoppingDistance;
-//     }
-// }

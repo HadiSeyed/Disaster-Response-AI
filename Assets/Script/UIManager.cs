@@ -2,74 +2,46 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    private BasicAI aiManager;
+    private BasicAI AIManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        aiManager = FindFirstObjectByType<BasicAI>();   
+        AIManager = FindFirstObjectByType<BasicAI>();   
     }
 
     public void MoveRobot()
     {
-        aiManager.SendRobotToLocation(new Vector3(7, 0, -9));
+        AIManager.SendRobotToLocation(new Vector3(7, 0, -9));
     }
 
     public void SearchArea()
     {
-        aiManager.StartSearch();
+        AIManager.StartSearch();
     }
 
     public void RescueSurvivor()
     {
-        aiManager.StartRescue();
+        AIManager.StartRescue();
     }
 
     public void ReturnToBase()
     {
-        aiManager.ReturnRobotToBase();
+        AIManager.ReturnRobotToBase();
     }
 
     public void MarkSurvivor()
     {
-        aiManager.EnableMarkSurvivorMode();
+        AIManager.EnableMarkSurvivorMode();
     }
 
     public void ClearObstacle()
     {
-        aiManager.ClearSelectedObstacle();
+        AIManager.ClearSelectedObstacle();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    // // Update is called once per frame
+    // void Update()
+    // {
         
-    }
+    // }
 }
-
-
-
-
-
-// using UnityEngine;
-
-// public class UIManager : MonoBehaviour
-// {
-//     public BasicAI aiManager;
-
-//     public void MoveRobot()
-//     {
-//         Debug.Log("Move button pressed!");
-
-//         aiManager.SendRobotToLocation(new Vector3(7, 0, -9));
-//     }
-
-//     public void SearchArea()
-//     {
-//         Debug.Log("Search button pressed!");
-//     }
-
-//     public void MarkSurvivor()
-//     {
-//         Debug.Log("Mark Survivor button pressed!");
-//     }
-// }
